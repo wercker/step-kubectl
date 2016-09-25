@@ -58,11 +58,37 @@ deploy:
           command: create -f cities-controller.json
 ```
 
+# Google Container Engine (GKE) clusters
+
+Passing the contents of a Google service account private key JSON file in optional parameter `gcloud-key-json` will
+cause this step to use the gcloud SDK to authenticate kubectl for access to GKE with a Google service account.
+
+You'll also need to pass:
+
+```
+  gcloud-key-json:
+    type: string
+    required: false
+  gke-cluster-name:
+    type: string
+    required: false
+  gke-cluster-zone:
+    type: string
+    required: false
+  gke-cluster-project:
+    type: string
+    required: false
+```
+
 # License
 
 The MIT License (MIT)
 
 # Changelog
+
+## 3.1.8
+
+- Add support for authenticating kubectl with GKE clusters with a Google service account.
 
 ## 3.0.0
 

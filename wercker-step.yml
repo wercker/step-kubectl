@@ -1,9 +1,10 @@
 name: kubectl
-version: 3.0.0
-description: Step to run kubectl
+version: 3.1.8
+description: Step to run kubectl, with support for GKE clusters.
 keywords:
   - kubernetes
   - kubectl
+  - gke
 properties:
   token:
     type: string
@@ -90,6 +91,18 @@ properties:
     type: string
     required: false
   overwrite:
+    type: string
+    required: false
+  gcloud-key-json:
+    type: string
+    required: false
+  gke-cluster-name:
+    type: string
+    required: false
+  gke-cluster-zone:
+    type: string
+    required: false
+  gke-cluster-project:
     type: string
     required: false
 
