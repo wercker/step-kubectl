@@ -1,9 +1,57 @@
 #!/bin/sh
 
+GCLOUD_INSTALL_DIR="$WERCKER_STEP_ROOT/google-cloud-sdk/bin/"
 kubectl="$WERCKER_STEP_ROOT/kubectl"
+
+gcloud_auth_config() {
+
+  if [ ! -n "$WERCKER_KUBECTL_GKE_CLUSTER_NAME" ]; then
+    fail "GKE cluster name must be provided."
+  fi
+
+  if [ ! -n "$WERCKER_KUBECTL_GKE_CLUSTER_ZONE" ]; then
+    fail "GKE cluster zone must be provided."
+  fi
+
+  if [ ! -n "$WERCKER_KUBECTL_GKE_CLUSTER_PROJECT" ]; then
+    fail "GKE cluster project name must be provided."
+  fi
+
+  gcloud="$GCLOUD_INSTALL_DIR/gcloud"
+  gcloud_key_file="$WERCKER_STEP_ROOT/gcloud.json"
+
+  export CLOUDSDK_COMPUTE_ZONE="$WERCKER_KUBECTL_GKE_CLUSTER_ZONE"
+  export CLOUDSDK_CORE_PROJECT="$WERCKER_KUBECTL_GKE_CLUSTER_PROJECT"
+
+  # Write the JSON string to a temporary file
+  echo "$WERCKER_KUBECTL_GCLOUD_KEY_JSON" > "$gcloud_key_file"
+
+  # Attempt to activate the service account with Google
+  if ! $gcloud auth activate-service-account --key-file "$gcloud_key_file"; then
+    fail "Unable to authenticate with Google Cloud..."
+  fi
+
+  # This env var pointing to the temporary JSON key file needs to be exported
+  # as it's read by kubectl's GKE authenticator plugin
+  export GOOGLE_APPLICATION_CREDENTIALS="$gcloud_key_file"
+
+  # This will set the kubectl config...
+  if ! $gcloud container clusters get-credentials "$WERCKER_KUBECTL_GKE_CLUSTER_NAME"; then
+    fail "Unable to get kubectl credentials for GKE cluster."
+  fi
+}
 
 main() {
   display_version
+
+  if [ -n "$WERCKER_KUBECTL_GCLOUD_KEY_JSON" ]; then
+    # Google cloud key JSON found. We'll assume kubectl
+    # needs access to a GKE cluster, and will configure kubectl
+    # to use the service account that should be defined in the JSON string.
+    echo "Configuring gcloud service account"
+
+    gcloud_auth_config;
+  fi
 
   if [ -z "$WERCKER_KUBECTL_COMMAND" ]; then
     fail "wercker-kubectl: command argument cannot be empty"
