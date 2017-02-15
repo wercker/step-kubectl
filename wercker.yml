@@ -6,22 +6,18 @@ build:
         - script:
             name: config
             code: |
-                export KUBERNETES_VERSION="1.5.2"
-                export KUBERNETES_SHA256="6a694ca36853ef5870dd86dab5db1a06dd69f202f212ba37c736fd009ea1ce91"
+                export KUBERNETES_VERSION="1.5.3"
+                export KUBERNETES_SHA256="eaf386a46eeee324bb71349bba7d5d3f41d7d19af75537cf9e4e7045d7068f68"
                 echo "Installing version $KUBERNETES_VERSION of kubernetes"
 
         - script:
             name: fetch kubernetes archive
             code: |
-                curl -L https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubectl > $WERCKER_OUTPUT_DIR/kubectl
-
-        - script:
-            name: validate kubernetes archive
-            code: |
-                cat $WERCKER_OUTPUT_DIR/kubectl| sha256sum | grep -q "$KUBERNETES_SHA256"
+                curl -L https://dl.k8s.io/v${KUBERNETES_VERSION}/kubernetes-client-linux-amd64.tar.gz > kubernetes-client-linux-amd64.tar.gz
+                sha256sum kubernetes-client-linux-amd64.tar.gz | grep -q "$KUBERNETES_SHA256"
+                tar xvzf kubernetes-client-linux-amd64.tar.gz
+                kubernetes/client/bin/kubectl version --client
 
         - script:
             name: prepare output
-            code: |
-                cp "$WERCKER_ROOT/LICENSE" "$WERCKER_ROOT/README.md" "$WERCKER_ROOT/run.sh" "$WERCKER_ROOT/wercker.yml" "$WERCKER_ROOT/wercker-step.yml" "$WERCKER_OUTPUT_DIR"
-                chmod ugo+rx "$WERCKER_OUTPUT_DIR/kubectl"
+            code: cp "kubernetes/client/bin/kubectl" "LICENSE" "README.md" "run.sh" "wercker.yml" "wercker-step.yml" "$WERCKER_OUTPUT_DIR"

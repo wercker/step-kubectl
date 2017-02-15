@@ -1,5 +1,5 @@
 name: kubectl
-version: 3.2.0-kube1.5.2
+version: 3.3.0
 description: Step to run kubectl
 keywords:
   - kubernetes
