@@ -5,7 +5,7 @@ keywords:
   - kubernetes
   - kubectl
 properties:
-  deployment:
+  status-command:
     type: string
     required: true
 
