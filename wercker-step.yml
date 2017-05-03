@@ -5,6 +5,10 @@ keywords:
   - kubernetes
   - kubectl
 properties:
+  deployment:
+    type: string
+    required: true
+
   token:
     type: string
     required: false
