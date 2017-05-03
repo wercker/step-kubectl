@@ -10,6 +10,7 @@ main() {
   fi
 
   cmd="$WERCKER_KUBECTL_COMMAND"
+  statusCmd="$WERCKER_KUBECTL_STATUS_COMMAND"
 
   # Global args
   #global_args
@@ -169,6 +170,9 @@ main() {
   fi
 
   eval "$kubectl" "$global_args" "$raw_global_args" "$cmd" "$args" "$raw_args"
+  
+  # wait for deployment to rollout
+  eval "$kubectl" "$global_args" "$raw_global_args" "$statusCmd"
 }
 
 display_version() {
