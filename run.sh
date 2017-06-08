@@ -168,7 +168,8 @@ main() {
     info "kubectl $global_args $raw_global_args $cmd $args $raw_args"
   fi
 
-  eval "$kubectl" "$global_args" "$raw_global_args" "$cmd" "$args" "$raw_args"
+  eval "$kubectl" "$global_args" "$raw_global_args" "$cmd" "$args" "$raw_args" | tee -a kubectl.log
+  ./register-deploy.sh kubectl.log
 }
 
 display_version() {
