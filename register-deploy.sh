@@ -11,7 +11,7 @@ function normalize {
   NO_SPACES=${TEXT// /\\ }
   NO_COMMAS=${NO_SPACES//,/\\,}
   NO_EQUALS=${NO_COMMAS//=/\\=}
-  echo $NO_EQUALS
+  echo "$NO_EQUALS"
 }
 
 AUTHOR_EMAIL=$(normalize "$(git --no-pager log -1 --format="%aE")")
