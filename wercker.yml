@@ -9,15 +9,15 @@ build:
         - script:
             name: config
             code: |
-                export KUBERNETES_VERSION="1.15.0"
-                export KUBERNETES_SHA256="fc7b8acda2c1a29475d45cd834bbf96aa90e3ed75ab26711f3e0c02a195345e7"
+                export KUBERNETES_VERSION="1.16.0"
+                export KUBERNETES_SHA512="fccf152588edbaaa21ca94c67408b8754f8bc55e49470380e10cf987be27495a8411d019d807df2b2c1c7620f8535e8f237848c3c1ac3791b91da8df59dea5aa"
                 echo "Installing version $KUBERNETES_VERSION of kubernetes"
 
         - script:
             name: fetch kubernetes archive
             code: |
                 curl -L https://dl.k8s.io/v${KUBERNETES_VERSION}/kubernetes-client-linux-amd64.tar.gz > kubernetes-client-linux-amd64.tar.gz
-                sha256sum kubernetes-client-linux-amd64.tar.gz | grep -q "$KUBERNETES_SHA256"
+                sha512sum kubernetes-client-linux-amd64.tar.gz | grep -q "$KUBERNETES_SHA512"
                 tar xvzf kubernetes-client-linux-amd64.tar.gz
                 kubernetes/client/bin/kubectl version --client
 
