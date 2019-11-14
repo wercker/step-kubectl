@@ -3,8 +3,6 @@
 kubectl="$WERCKER_STEP_ROOT/kubectl"
 
 main() {
-  display_version
-
   if [ -z "$WERCKER_KUBECTL_COMMAND" ]; then
     fail "wercker-kubectl: command argument cannot be empty"
   fi
@@ -36,6 +34,8 @@ main() {
   if [ -n "$WERCKER_KUBECTL_SERVER" ]; then
     global_args="$global_args --server=\"$WERCKER_KUBECTL_SERVER\""
   fi
+  
+  display_version
 
   # insecure-skip-tls-verify
   if [ -n "$WERCKER_KUBECTL_INSECURE_SKIP_TLS_VERIFY" ]; then
@@ -177,7 +177,7 @@ main() {
 
 display_version() {
   info "Running kubectl version:"
-  "$kubectl" version --client
+  "$kubectl" "$global_args" version --client
   echo ""
 }
 
