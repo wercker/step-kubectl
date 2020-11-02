@@ -1,0 +1,23 @@
+name: Security
+on: [push]
+jobs:
+  tartufo-scan:
+    name: Tartufo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install Tartufo
+        run: pip3 install 'tartufo== ${{ secrets.OVER_SERVICES_TARTUFO_VERSION }}'
+
+      - name: Log installed Tartufo version
+        run: tartufo --version | sed s'/\./-/g'
+
+      - name: Run Tartufo scan on current branch
+        run: tartufo scan-local-repo --branch $(git branch --show-current) .
